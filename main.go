@@ -51,7 +51,7 @@ func main() {
 	// 以下テストコマンド
 	/*
 		curl --request 'POST' \
-		--url 'http://localhost:8080/todos' \
+		--url "http://${AP_HOST}:${AP_PORT}/todos" \
 		--header 'Content-Type: application/json' \
 		--data '{"title": "アプリの完成", "detail": "Denoを頑張って学ぶ必要がある。", "point": 1, "done": true}' \
 		--include
@@ -59,21 +59,21 @@ func main() {
 	router.POST("/todos", createTodo)
 	/*
 		curl --request 'GET' \
-		--url 'http://localhost:8080/todos' \
+		--url "http://${AP_HOST}:${AP_PORT}/todos" \
 		--header 'Content-Type: application/json' \
 		--include
 	*/
 	router.GET("/todos", listTodos)
 	/*
 		curl --request 'GET' \
-		--url 'http://localhost:8080/todos/2' \
+		--url "http://${AP_HOST}:${AP_PORT}/todos/2" \
 		--header 'Content-Type: application/json' \
 		--include
 	*/
 	router.GET("/todos/:id", getTodo)
 	/*
 		curl --request 'PUT' \
-		--url 'http://localhost:8080/todos/2' \
+		--url "http://${AP_HOST}:${AP_PORT}/todos/2" \
 		--header 'Content-Type: application/json' \
 		--data '{"title": "アプリの完成", "detail": "Node.jsとGoとMySQLを頑張って学ぶ必要がある。", "point": 3, "done": true}' \
 		--include
@@ -81,12 +81,13 @@ func main() {
 	router.PUT("/todos/:id", updateTodo)
 	/*
 		curl --request 'DELETE' \
-		--url 'http://localhost:8080/todos/2' \
+		--url "http://${AP_HOST}:${AP_PORT}/todos/2" \
 		--header 'Content-Type: application/json' \
 		--include
 	*/
 	router.DELETE("/todos/:id", deleteTodo)
-	router.Run("localhost:8080")
+	// APサーバのipアドレス(自身以外が可能) or localhost(127.0.0.1)
+	router.Run(fmt.Sprintf("%v:%v", os.Getenv("AP_HOST"), os.Getenv("AP_PORT")))
 }
 
 // Todoを作成
